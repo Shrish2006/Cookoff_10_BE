@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    env_file:
+      - .env
+    volumes:
+      - redis_data:/data
+
+  api:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  postgres_data:
+  redis_data:
