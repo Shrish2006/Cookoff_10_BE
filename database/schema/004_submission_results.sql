@@ -8,9 +8,7 @@ CREATE TABLE submission_results (
     points_awarded INTEGER NOT NULL,
 	status TEXT NOT NULL,
     description TEXT,
-    PRIMARY KEY(id),
-    FOREIGN KEY(submission_id) REFERENCES submissions(id)
-    ON UPDATE NO ACTION ON DELETE CASCADE
+    PRIMARY KEY(id)
 );
 
 -- +goose Down

@@ -14,7 +14,13 @@ ADD CONSTRAINT fk_submissions_user
 ADD FOREIGN KEY(user_id) REFERENCES users(id)
 ON UPDATE NO ACTION ON DELETE CASCADE;
 
+ALTER TABLE submission_results
+ADD CONSTRAINT fk_submission_results
+ADD FOREIGN KEY(submission_id) REFERENCES submissions(id)
+ON UPDATE NO ACTION ON DELETE CASCADE
+
 -- +goose Down
 ALTER TABLE submissions DROP CONSTRAINT fk_submissions_question;
 ALTER TABLE testcases DROP CONSTRAINT fk_testcases;
 ALTER TABLE submissions DROP CONSTRAINT fk_submissions_user;
+ALTER TABLE submission_results DROP CONSTRAINT fk_submission_results;
