@@ -17,6 +17,13 @@ INSERT INTO questions (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 );
 
+-- name: GetQuestion :one
+SELECT * FROM questions
+WHERE id = $1;
+
+-- name: GetAllQuestions :many
+SELECT * FROM questions ORDER BY id;
+
 -- name: UpdateQuestion :exec
 UPDATE questions
 SET description = $2,
@@ -41,3 +48,6 @@ WHERE id = $1;
 UPDATE questions
 SET isBountyActive = false
 WHERE id = $1;
+
+--name: DeleteQuestion :exec
+DELETE FROM questions WHERE id = $1;
