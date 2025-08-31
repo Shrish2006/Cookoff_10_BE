@@ -16,5 +16,5 @@ CREATE TABLE questions (
 	PRIMARY KEY(id)
 );
 
---+ goose Down
+-- +goose Down
 DROP TABLE questions;
