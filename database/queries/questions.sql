@@ -49,5 +49,5 @@ UPDATE questions
 SET isBountyActive = false
 WHERE id = $1;
 
---name: DeleteQuestion :exec
+-- name: DeleteQuestion :exec
 DELETE FROM questions WHERE id = $1;
