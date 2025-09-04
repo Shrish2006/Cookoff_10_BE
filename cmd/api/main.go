@@ -2,6 +2,7 @@ package main
 
 import (
 	logger "github.com/CodeChefVIT/cookoff-10.0-be/pkg/logging"
+	"github.com/CodeChefVIT/cookoff-10.0-be/pkg/helpers/validator"
 	"github.com/CodeChefVIT/cookoff-10.0-be/pkg/router"
 	"github.com/CodeChefVIT/cookoff-10.0-be/pkg/utils"
 	"github.com/labstack/echo/v4"
@@ -13,6 +14,7 @@ func main() {
 	utils.LoadConfig()
 	utils.InitCache()
 	utils.InitDB()
+	validator.InitValidator()
 
 	e := echo.New()
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
