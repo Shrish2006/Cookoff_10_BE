@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE questions (
-	id UUID NOT NULL UNIQUE,
+	id UUID NOT NULL,
 	description TEXT NOT NULL,
 	title TEXT NOT NULL,
     qType TEXT NOT NULL,

@@ -1,64 +1,66 @@
 openapi: 3.0.0
 info:
-  title: Sample API
-  description: A sample API to illustrate OpenAPI specification
+  title: Cookoff Backend API
+  description: API Documentation
   version: 1.0.0
 servers:
-  - url: https://api.example.com/v1
+  - url: http://localhost:8080
+    description: Local server
 paths:
-  /users:
-    get:
-      summary: List all users
-      responses:
-        "200":
-          description: A list of users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
+  /signup:
     post:
-      summary: Create a new user
+      summary: User signup
+      description: Creates a user and sends a generated password through mail
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        "201":
-          description: User created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-  /users/{id}:
-    get:
-      summary: Get a user by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+              $ref: "#/components/schemas/SignupRequest"
       responses:
         "200":
-          description: A single user
+          description: User successfully created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: User not found
+                $ref: "#/components/schemas/SignupResponse"
+        "400":
+          description: Invalid request payload
+        "406":
+          description: Validation failed
+        "409":
+          description: User already exists
+        "500":
+          description: Internal server error
+
 components:
-  schemas:
-    User:
+  schemas:  
+    SignupRequest:
       type: object
+      required:
+        - email
+        - name
+        - reg_no
       properties:
-        id:
-          type: string
-        name:
-          type: string
         email:
           type: string
+          format: email
+        name:
+          type: string
+        reg_no:
+          type: string
+
+    SignupResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: user added
+        email:
+          type: string
+          description: User Email
+          example: test@example.com
+        password:
+          type: string
+          description: Generated plain password
+          example: test123
