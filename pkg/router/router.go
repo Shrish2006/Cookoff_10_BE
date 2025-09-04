@@ -9,4 +9,5 @@ func RegisterRoute(e *echo.Echo) {
 
 	e.GET("/ping", controllers.Ping)
 	e.GET("/docs", controllers.Docs)
+	e.POST("/signup", controllers.Signup)
 }
