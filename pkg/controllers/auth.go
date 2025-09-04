@@ -54,7 +54,7 @@ func Signup(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	data, err := utils.Queries.CreateUser(c.Request().Context(), db.CreateUserParams{
+	_, err = utils.Queries.CreateUser(c.Request().Context(), db.CreateUserParams{
 		ID:             id,
 		Email:          payload.Email,
 		RegNo:          payload.RegNo,
