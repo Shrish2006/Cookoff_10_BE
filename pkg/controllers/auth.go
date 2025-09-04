@@ -75,13 +75,6 @@ func Signup(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{
-		"data": data,
-		"hashed" : hashed,
-		"pass": password,
-		"id": id,
-	})
-
-	return c.JSON(http.StatusOK, echo.Map{
 		"message": "user added",
 		"email": payload.Email,
 		"password": password,
