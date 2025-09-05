@@ -14,7 +14,7 @@ type SubmissionRequest struct {
 	SourceCode string `json:"source_code" validate:"required"`
 	LanguageID int    `json:"language_id" validate:"required"`
 	QuestionID string `json:"question_id" validate:"required"`
-	UserID     string `json:"user_id"` // optional
+	UserID     string `json:"user_id"` // Hata dio after auth
 }
 
 func SubmitCode(c echo.Context) error {
@@ -23,23 +23,23 @@ func SubmitCode(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	// Generate a new submission ID
+	
 	submissionID := uuid.New()
 
-	// Fetch testcases using sqlc Queries
+	
 	testcases, err := utils.GetTestcases(req.QuestionID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch testcases"})
 	}
 
-	// Create batch submission in Judge0
+	
 	tokens, err := workers.CreateBatchSubmission(submissionID.String(), req.SourceCode, req.LanguageID, testcases)
 	if err != nil {
 		fmt.Println("CreateBatchSubmission error:", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to create batch submission"})
 	}
 
-	// Save submission in DB with status "pending"
+	
 	sub := utils.SubmissionInput{
 		ID:         submissionID,
 		QuestionID: req.QuestionID,
@@ -51,7 +51,7 @@ func SubmitCode(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to save submission record"})
 	}
 
-	// Return submission ID and Judge0 tokens
+	
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"submission_id": submissionID,
 		"tokens":        tokens,
