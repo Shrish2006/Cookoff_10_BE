@@ -2,13 +2,13 @@ package auth
 
 import (
 	"time"
-	"os"
 
 	"github.com/CodeChefVIT/cookoff-10.0-be/pkg/db"
+	"github.com/CodeChefVIT/cookoff-10.0-be/pkg/utils"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+var jwtSecret = []byte(utils.Config.JwtSecret)
 
 type AccessTokenClaims struct {
 	Username string `json:"username"`

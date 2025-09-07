@@ -103,6 +103,9 @@ components:
     ErrorResponse:
       type: object
       properties:
+        status:
+          type: string
+          example: "failed"
         error:
           type: string
           description: Error Message
@@ -125,6 +128,9 @@ components:
     SignupResponse:
       type: object
       properties:
+        status:
+          type: string
+          example: "success"
         message:
           type: string
           example: user added
@@ -153,6 +159,9 @@ components:
     LoginResponse:
       type: object
       properties:
+        status:
+          type: string
+          example: "success"
         message:
           type: string
           example: "Login successful"
