@@ -14,7 +14,7 @@ type SubmissionInput struct {
 	SourceCode string
 	UserID     string
 }
-
+// place holder code -- renove when queue is setup
 func SaveSubmission(sub SubmissionInput) error {
 	if Queries == nil {
 		return fmt.Errorf("DB Queries not initialized")
