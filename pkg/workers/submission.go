@@ -40,10 +40,10 @@ func CreateBatchSubmission(submissionID, sourceCode string, languageID int, test
 	if judge0URI == "" {
 		return nil, errors.New("JUDGE0_URI not set in environment")
 	}
-	apiKey := os.Getenv("JUDGE0_API_KEY")
-	if apiKey == "" {
-		return nil, errors.New("JUDGE0_API_KEY not set in environment")
-	}
+	// apiKey := os.Getenv("JUDGE0_API_KEY")
+	// if apiKey == "" {
+	// 	return nil, errors.New("JUDGE0_API_KEY not set in environment")
+	// }
 
 	req, err := http.NewRequest("POST", judge0URI, bytes.NewBuffer(data))
 	if err != nil {
@@ -51,8 +51,8 @@ func CreateBatchSubmission(submissionID, sourceCode string, languageID int, test
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-RapidAPI-Key", apiKey)
-	req.Header.Set("X-RapidAPI-Host", "judge0-ce.p.rapidapi.com")
+	// req.Header.Set("X-RapidAPI-Key", apiKey)
+	// req.Header.Set("X-RapidAPI-Host", "judge0-ce.p.rapidapi.com")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
