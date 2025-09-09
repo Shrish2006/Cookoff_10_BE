@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/CodeChefVIT/cookoff-10.0-be/pkg/db"
@@ -30,80 +29,144 @@ func CreateQuestion(c echo.Context) error {
 	var req db.CreateQuestionParams
 	err := c.Bind(&req)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Could not create question",
+			"error":  err.Error(),
+		})
 	}
 	req.ID = uuid.New()
-	if err := utils.Queries.CreateQuestion(context.Background(), req); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	if err := utils.Queries.CreateQuestion(c.Request().Context(), req); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"status": "Could not create question",
+			"error":  err.Error(),
+		})
 	}
-	return c.JSON(http.StatusCreated, req)
+	return c.JSON(http.StatusCreated, echo.Map{
+		"status":  "success",
+		"message": "question created",
+		"data":    req,
+	})
 }
 
 func GetQuestion(c echo.Context) error {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": "UUID GALAT HAI BHAI"})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Question not found!",
+			"error":  "UUID GALAT HAI BHAI",
+		})
 	}
-	q, err := utils.Queries.GetQuestion(context.Background(), id)
+	q, err := utils.Queries.GetQuestion(c.Request().Context(), id)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "question not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{
+			"status": "Could not get question",
+			"error":  err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, q)
+	return c.JSON(http.StatusOK, echo.Map{
+		"status":   "success",
+		"question": q,
+	})
 }
 
 func GetAllQuestions(c echo.Context) error {
-	questions, err := utils.Queries.GetAllQuestions(context.Background())
+	questions, err := utils.Queries.GetAllQuestions(c.Request().Context())
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"status": "Could not get all the questions",
+			"error":  err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, questions)
+	return c.JSON(http.StatusOK, echo.Map{
+		"status":    "success",
+		"questions": questions,
+	})
 }
 
 func UpdateQuestion(c echo.Context) error {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": "UUID GALAT HAI BHAI"})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Could not update question",
+			"error":  "UUID GALAT HAI BHAI",
+		})
 	}
 	var req db.UpdateQuestionParams
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Could not update question",
+			"error":  err.Error(),
+		})
 	}
 	req.ID = id
-	if err := utils.Queries.UpdateQuestion(context.Background(), req); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	if err := utils.Queries.UpdateQuestion(c.Request().Context(), req); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"status": "Could not update question",
+			"error":  err.Error(),
+		})
 	}
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, echo.Map{
+		"status":  "success",
+		"message": "Question updated successfully!",
+	})
 }
 
 func DeleteQuestion(c echo.Context) error {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": "UUID GALAT HAI BHAI"})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Could not delete question",
+			"error":  "UUID GALAT HAI BHAI",
+		})
 	}
-	if err := utils.Queries.DeleteQuestion(context.Background(), id); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	if err := utils.Queries.DeleteQuestion(c.Request().Context(), id); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"status": "Could not delete question",
+			"error":  err.Error(),
+		})
 	}
-	return c.NoContent(http.StatusNoContent)
+	return c.JSON(http.StatusOK, echo.Map{
+		"status":  "success",
+		"message": "Question deleted successfully",
+	})
 }
 
 func ActivateBounty(c echo.Context) error {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": "UUID GALAT HAI BHAI"})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Could not activate bounty for the question",
+			"error":  "UUID GALAT HAI BHAI",
+		})
 	}
-	if err := utils.Queries.UpdateQuestionBountyActive(context.Background(), id); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	if err := utils.Queries.UpdateQuestionBountyActive(c.Request().Context(), id); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"status": "Could not activate bounty for the question",
+			"error":  err.Error(),
+		})
 	}
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, echo.Map{
+		"status":  "success",
+		"message": "Bounty activated for the question",
+	})
 }
 
 func DeactivateBounty(c echo.Context) error {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": "UUID GALAT HAI BHAI"})
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"status": "Could not deactivate bounty for the question",
+			"error":  "UUID GALAT HAI BHAI",
+		})
 	}
-	if err := utils.Queries.UpdateQuestionBountyInactive(context.Background(), id); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	if err := utils.Queries.UpdateQuestionBountyInactive(c.Request().Context(), id); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"status": "Could not deactivate bounty for the question",
+			"error":  err.Error(),
+		})
 	}
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, echo.Map{
+		"status":  "success",
+		"message": "Bounty deactivated for the question",
+	})
 }

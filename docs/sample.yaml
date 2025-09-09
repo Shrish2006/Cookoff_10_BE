@@ -97,45 +97,61 @@ paths:
               schema:
                $ref: "#/components/schemas/ErrorResponse"
   /questions:
+    post:
+      summary: Create a new question
+      tags:
+        - Questions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '201':
+          description: Question created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Question'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
     get:
       summary: Get all questions
-      operationId: getAllQuestions
+      tags:
+        - Questions
       responses:
-        "200":
+        '200':
           description: List of all questions
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Question"
-        "500":
-          description: Server error
-    post:
-      summary: Create a new question
-      operationId: createQuestion
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateQuestionParams"
-      responses:
-        "201":
-          description: Question created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Question"
-        "400":
-          description: Invalid input
-        "500":
-          description: Server error
+                type: object
+                properties:
+                  status:
+                    type: string
+                  questions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Question'
+        '500':
+          description: Internal server error
 
   /questions/{id}:
     get:
       summary: Get a question by ID
-      operationId: getQuestion
+      tags:
+        - Questions
       parameters:
         - name: id
           in: path
@@ -144,19 +160,26 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
-          description: Question details
+        '200':
+          description: Question found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Question"
-        "400":
+                type: object
+                properties:
+                  status:
+                    type: string
+                  question:
+                    $ref: '#/components/schemas/Question'
+        '400':
           description: Invalid UUID
-        "404":
+        '404':
           description: Question not found
+
     put:
-      summary: Update a question
-      operationId: updateQuestion
+      summary: Update a question by ID
+      tags:
+        - Questions
       parameters:
         - name: id
           in: path
@@ -169,17 +192,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateQuestionParams"
+              $ref: '#/components/schemas/Question'
       responses:
-        "200":
-          description: Updated successfully
-        "400":
-          description: Invalid request
-        "500":
-          description: Server error
+        '200':
+          description: Question updated successfully
+        '400':
+          description: Invalid UUID or bad request
+        '500':
+          description: Internal server error
+
     delete:
-      summary: Delete a question
-      operationId: deleteQuestion
+      summary: Delete a question by ID
+      tags:
+        - Questions
       parameters:
         - name: id
           in: path
@@ -188,17 +213,18 @@ paths:
             type: string
             format: uuid
       responses:
-        "204":
-          description: Deleted successfully
-        "400":
+        '200':
+          description: Question deleted successfully
+        '400':
           description: Invalid UUID
-        "500":
-          description: Server error
+        '500':
+          description: Internal server error
 
   /questions/{id}/bounty/activate:
     put:
-      summary: Activate bounty on a question
-      operationId: activateBounty
+      summary: Activate bounty for a question
+      tags:
+        - Questions
       parameters:
         - name: id
           in: path
@@ -207,17 +233,18 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
-          description: Bounty activated
-        "400":
+        '200':
+          description: Bounty activated successfully
+        '400':
           description: Invalid UUID
-        "500":
-          description: Server error
+        '500':
+          description: Internal server error
 
   /questions/{id}/bounty/deactivate:
     put:
-      summary: Deactivate bounty on a question
-      operationId: deactivateBounty
+      summary: Deactivate bounty for a question
+      tags:
+        - Questions
       parameters:
         - name: id
           in: path
@@ -226,12 +253,12 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
-          description: Bounty deactivated
-        "400":
+        '200':
+          description: Bounty deactivated successfully
+        '400':
           description: Invalid UUID
-        "500":
-          description: Server error
+        '500':
+          description: Internal server error
 
 
 components:
