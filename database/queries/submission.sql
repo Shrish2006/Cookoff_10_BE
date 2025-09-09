@@ -16,17 +16,7 @@ INSERT INTO submissions (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
 );
 
--- name: GetTestcases :many
-SELECT
-    id,
-    expected_output,
-    memory,
-    input,
-    hidden,
-    runtime,
-    question_id
-FROM testcases
-WHERE question_id = $1;
+
 
 -- name: GetSubmissionByID :one
 SELECT
