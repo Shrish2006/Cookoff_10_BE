@@ -96,6 +96,142 @@ paths:
             application/json:
               schema:
                $ref: "#/components/schemas/ErrorResponse"
+  /questions:
+    get:
+      summary: Get all questions
+      operationId: getAllQuestions
+      responses:
+        "200":
+          description: List of all questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+        "500":
+          description: Server error
+    post:
+      summary: Create a new question
+      operationId: createQuestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuestionParams"
+      responses:
+        "201":
+          description: Question created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid input
+        "500":
+          description: Server error
+
+  /questions/{id}:
+    get:
+      summary: Get a question by ID
+      operationId: getQuestion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Question details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid UUID
+        "404":
+          description: Question not found
+    put:
+      summary: Update a question
+      operationId: updateQuestion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuestionParams"
+      responses:
+        "200":
+          description: Updated successfully
+        "400":
+          description: Invalid request
+        "500":
+          description: Server error
+    delete:
+      summary: Delete a question
+      operationId: deleteQuestion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Deleted successfully
+        "400":
+          description: Invalid UUID
+        "500":
+          description: Server error
+
+  /questions/{id}/bounty/activate:
+    put:
+      summary: Activate bounty on a question
+      operationId: activateBounty
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Bounty activated
+        "400":
+          description: Invalid UUID
+        "500":
+          description: Server error
+
+  /questions/{id}/bounty/deactivate:
+    put:
+      summary: Deactivate bounty on a question
+      operationId: deactivateBounty
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Bounty deactivated
+        "400":
+          description: Invalid UUID
+        "500":
+          description: Server error
 
 
 components:
@@ -180,3 +316,155 @@ components:
               type: string
               description: User score (numeric type from Postgres)
               example: 100
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        title:
+          type: string
+        qType:
+          type: string
+        isBountyActive:
+          type: boolean
+        inputFormat:
+          type: array
+          items: { type: string }
+        points:
+          type: integer
+        round:
+          type: integer
+        constraints:
+          type: array
+          items: { type: string }
+        outputFormat:
+          type: array
+          items: { type: string }
+        sampleTestInput:
+          type: array
+          items: { type: string }
+        sampleTestOutput:
+          type: array
+          items: { type: string }
+        explanation:
+          type: array
+          items: { type: string }
+      required:
+        - id
+        - description
+        - title
+        - qType
+        - isBountyActive
+        - inputFormat
+        - points
+        - round
+        - constraints
+        - outputFormat
+        - sampleTestInput
+        - sampleTestOutput
+        - explanation
+
+    CreateQuestionParams:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        title:
+          type: string
+        qType:
+          type: string
+        isBountyActive:
+          type: boolean
+        inputFormat:
+          type: array
+          items: { type: string }
+        points:
+          type: integer
+        round:
+          type: integer
+        constraints:
+          type: array
+          items: { type: string }
+        outputFormat:
+          type: array
+          items: { type: string }
+        sampleTestInput:
+          type: array
+          items: { type: string }
+        sampleTestOutput:
+          type: array
+          items: { type: string }
+        explanation:
+          type: array
+          items: { type: string }
+      required:
+        - id
+        - description
+        - title
+        - qType
+        - isBountyActive
+        - inputFormat
+        - points
+        - round
+        - constraints
+        - outputFormat
+        - sampleTestInput
+        - sampleTestOutput
+        - explanation
+
+    UpdateQuestionParams:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        title:
+          type: string
+        qType:
+          type: string
+        isBountyActive:
+          type: boolean
+        inputFormat:
+          type: array
+          items: { type: string }
+        points:
+          type: integer
+        round:
+          type: integer
+        constraints:
+          type: array
+          items: { type: string }
+        outputFormat:
+          type: array
+          items: { type: string }
+        sampleTestInput:
+          type: array
+          items: { type: string }
+        sampleTestOutput:
+          type: array
+          items: { type: string }
+        explanation:
+          type: array
+          items: { type: string }
+      required:
+        - id
+        - description
+        - title
+        - qType
+        - isBountyActive
+        - inputFormat
+        - points
+        - round
+        - constraints
+        - outputFormat
+        - sampleTestInput
+        - sampleTestOutput
+        - explanation
