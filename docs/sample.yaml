@@ -260,8 +260,231 @@ paths:
         '500':
           description: Internal server error
 
+  /testcase:
+    post:
+      tags:
+        - Test Cases
+      summary: Create a new test case
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - question_id
+                - input
+                - expected_output
+                - memory
+                - runtime
+              properties:
+                question_id:
+                  type: string
+                  format: uuid
+                input:
+                  type: string
+                expected_output:
+                  type: string
+                memory:
+                  type: number
+                runtime:
+                  type: number
+                hidden:
+                  type: boolean
+                  default: false
+      responses:
+        '201':
+          description: Test case created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestCase'
+  
+  /testcase/{id}:
+    get:
+      tags:
+        - Test Cases
+      summary: Get a test case by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Test case details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestCase'
+    
+    put:
+      tags:
+        - Test Cases
+      summary: Update a test case
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question_id:
+                  type: string
+                  format: uuid
+                input:
+                  type: string
+                expected_output:
+                  type: string
+                memory:
+                  type: number
+                runtime:
+                  type: number
+                hidden:
+                  type: boolean
+      responses:
+        '200':
+          description: Test case updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestCase'
+    
+    delete:
+      tags:
+        - Test Cases
+      summary: Delete a test case
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Test case deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Test case deleted successfully"
+
+  /testcases:
+    get:
+      tags:
+        - Test Cases
+      summary: Get all test cases (Admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all test cases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  test_cases:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TestCase'
+                  total_count:
+                    type: integer
+                    example: 10
+
+  /question/{id}/testcases:
+    get:
+      tags:
+        - Test Cases
+      summary: Get all test cases for a question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of test cases for the question
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  test_cases:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TestCase'
+                  total_count:
+                    type: integer
+                    example: 5
+
+  /question/{id}/testcases/public:
+    get:
+      tags:
+        - Test Cases
+      summary: Get public test cases for a question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of public test cases for the question
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  test_cases:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TestCase'
+                  total_count:
+                    type: integer
+                    example: 3
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     ErrorResponse:
       type: object
@@ -495,3 +718,36 @@ components:
         - sampleTestInput
         - sampleTestOutput
         - explanation
+
+    TestCase:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        question_id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        input:
+          type: string
+          example: "1 2 3"
+        expected_output:
+          type: string
+          example: "6"
+        memory:
+          type: number
+          format: float
+          example: 2.5
+        runtime:
+          type: number
+          format: float
+          example: 1.2
+        hidden:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"

@@ -22,4 +22,12 @@ func RegisterRoute(e *echo.Echo) {
 	e.POST("/question/:id/bounty/activate", controllers.ActivateBounty)
 	e.POST("/question/:id/bounty/deactivate", controllers.DeactivateBounty)
 
+	// Test case routes
+	e.GET("/testcase/:id", controllers.GetTestCase)
+	e.GET("/question/:id/testcases", controllers.GetTestCasesByQuestion)
+	e.GET("/question/:id/testcases/public", controllers.GetPublicTestCasesByQuestion)
+	e.POST("/testcase", controllers.CreateTestCase)
+	e.PUT("/testcase/:id", controllers.UpdateTestCase)
+	e.DELETE("/testcase/:id", controllers.DeleteTestCase)
+	e.GET("/testcases", controllers.GetAllTestCases)
 }
